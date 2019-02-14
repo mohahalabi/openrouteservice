@@ -227,6 +227,14 @@ public class RouteRequest {
     @JsonIgnore
     private boolean hasSimplifyGeometry = false;
 
+    @ApiModelProperty(name = "skip_segments", value = "Specifies the segments that should be skipped in the route calculation. " +
+            "A segment is the connection between two given coordinates and the counting starts with 1 for the connection between the first and second coordinate.",
+            example = "[2,4]")
+    @JsonProperty("skip_segments")
+    private List<Integer> skipSegments;
+    @JsonIgnore
+    private boolean hasSkipSegments = false;
+
     @JsonCreator
     public RouteRequest(@JsonProperty(value = PARAM_COORDINATES, required = true) List<List<Double>> coordinates) {
         this.coordinates = coordinates;
@@ -467,6 +475,15 @@ public class RouteRequest {
         this.hasSimplifyGeometry = true;
     }
 
+    public List<Integer> getSkipSegments(){
+        return this.skipSegments;
+    }
+
+    public void setSkipSegments(List<Integer> skipSegments){
+        this.skipSegments = skipSegments;
+        hasSkipSegments = true;
+    }
+
     public boolean hasIncludeRoundaboutExitInfo() {
         return hasIncludeRoundaboutExitInfo;
     }
@@ -534,4 +551,6 @@ public class RouteRequest {
     public boolean hasSimplifyGeometry() {
         return hasSimplifyGeometry;
     }
+
+    public boolean hasSkipSegments() { return hasSkipSegments;}
 }

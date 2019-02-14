@@ -99,6 +99,25 @@ public class RouteRequestHandler extends GenericHandler {
             }
         }
 
+        if (request.hasSkipSegments()) {
+            String skipSegmentsName = "skip_segments";
+            routingRequest.setSkipSegments(request.getSkipSegments());
+            for (int i = 0; i < request.getSkipSegments().size(); i++) {
+                if (request.getSkipSegments().get(i) >= request.getCoordinates().size()) {
+                    throw new ParameterOutOfRangeException(RoutingErrorCodes.INVALID_PARAMETER_VALUE, skipSegmentsName, request.getSkipSegments().get(i).toString(), String.valueOf(request.getCoordinates().size() - 1));
+                }
+                if (request.getSkipSegments().get(i) <= 0) {
+                    throw new ParameterValueException(RoutingErrorCodes.INVALID_PARAMETER_VALUE, skipSegmentsName, request.getSkipSegments().toString(), "The individual skip_segments values have to be greater than 0.");
+                }
+            }
+            if (request.getSkipSegments().size() > request.getCoordinates().size() - 1) {
+                throw new ParameterValueException(RoutingErrorCodes.INVALID_PARAMETER_VALUE, skipSegmentsName, request.getSkipSegments().toString(), "The amount of segments to skip shouldn't be more than segments in the coordinates.");
+            }
+            if (request.getSkipSegments().isEmpty()) {
+                throw new EmptyElementException(RoutingErrorCodes.EMPTY_ELEMENT, skipSegmentsName);
+            }
+        }
+
         if(request.hasId())
             routingRequest.setId(request.getId());
 
